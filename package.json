@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@coreui/coreui": "^5.0.2",
+    "@coreui/vue": "^5.1.0",
+    "@popperjs/core": "^2.11.8",
     "axios": "^1.7.2",
+    "bootstrap": "^5.3.3",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"

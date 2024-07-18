@@ -1,4 +1,5 @@
 <script setup>
+
 </script>
 
 <template>
@@ -59,7 +60,6 @@
                 </ul>
               </div>
             </div>
-
 
             <!-- <nav class="woocommerce-pagination">
               <ul class="page-numbers">

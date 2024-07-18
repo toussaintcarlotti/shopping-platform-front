@@ -1,5 +1,17 @@
 <script setup>
 
+import {
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle
+} from "@coreui/vue/dist/esm/components/dropdown/index.js";
+
+import {useAuthStore} from "@/stores/authStore.js";
+import {onMounted} from "vue";
+
+const store = useAuthStore();
+
 </script>
 
 <template>
@@ -46,77 +58,60 @@
 
           <div class="attr-right">
             <div class="attr-nav">
-              <ul>
-                <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="far fa-shopping-cart"></i>
-                    <span class="badge">3</span>
-                  </a>
-                  <ul class="dropdown-menu cart-list">
-                    <li>
-                      <div class="thumb">
-                        <a class="photo">
-                          <img src="@/assets/images/piston.jpg" alt="Thumb">
-                        </a>
-                        <a class="remove-product">
-                          <i class="fas fa-times"></i>
-                        </a>
+                <CDropdown>
+                  <CDropdownToggle>
+                    <div class="position-relative py-2">
+                      <i class="far fa-shopping-cart fa-lg"></i>
+                      <span class="cart-badge">3</span>
+                    </div>
+                  </CDropdownToggle>
+                  <CDropdownMenu>
+                    <CDropdownItem>
+                      <div class="d-flex">
+                        <div class="thumb">
+                          <a class="photo">
+                            <img src="@/assets/images/piston.jpg" alt="Thumb">
+                          </a>
+                          <a class="remove-product">
+                            <i class="fas fa-times"></i>
+                          </a>
+                        </div>
+                        <div class="info">
+                          <h6><a>Delica omtantur </a></h6>
+                          <p>2x - <span class="price">$99.99</span></p>
+                        </div>
                       </div>
-                      <div class="info">
-                        <h6><a>Delica omtantur </a></h6>
-                        <p>2x - <span class="price">$99.99</span></p>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="thumb">
-                        <a class="photo">
-                          <img src="@/assets/images/piston.jpg" alt="Thumb">
-                        </a>
-                        <a class="remove-product">
-                          <i class="fas fa-times"></i>
-                        </a>
-                      </div>
-                      <div class="info">
-                        <h6><a>Omnes ocurreret</a></h6>
-                        <p>1x - <span class="price">$33.33</span></p>
-                      </div>
-                    </li>
-                    <li class="total">
-                      <span class="pull-right"><strong>Total</strong>: $0.00</span>
-                      <a class="btn btn-default btn-cart">Cart</a>
-                      <a class="btn btn-default btn-cart">Checkout</a>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
+                    </CDropdownItem>
+                    <CDropdownItem>Another action</CDropdownItem>
+                    <CDropdownItem>Something else here</CDropdownItem>
+                  </CDropdownMenu>
+                </CDropdown>
 
-          <div class="attr-right">
-            <div class="attr-nav">
-              <ul>
-                <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="far fa-user"></i>
-                  </a>
-                  <ul class="dropdown-menu cart-list">
-                    <li>
-                      <div class="info">
-                        <h6>
-                          <RouterLink>Connexion</RouterLink>
-                        </h6>
-                      </div>
-                    </li>
-                    <li>
-                      <div class="info">
-                        <h6>
-                          <RouterLink>Inscription</RouterLink>
-                        </h6>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
+              <CDropdown>
+                <CDropdownToggle>
+                  <i class="far fa-user fa-lg"></i>
+                </CDropdownToggle>
+                <CDropdownMenu class="cart-list" v-if="!store.token">
+                  <CDropdownItem>
+                    <RouterLink :to="{ name: 'login' }">Connexion</RouterLink>
+                  </CDropdownItem>
+                  <CDropdownItem>
+                    <RouterLink :to="{ name: 'register' }">Inscription</RouterLink>
+                  </CDropdownItem>
+                </CDropdownMenu>
+                <CDropdownMenu class="cart-list" v-if="store.token">
+                  <CDropdownItem>
+                    <div class="fw-bold h5 mb-0">{{ store.user.first_name }} {{ store.user.last_name }}</div>
+                    <p class="text-muted small mb-0">{{ store.user.email }}</p>
+                  </CDropdownItem>
+                  <CDropdownItem>
+                    <RouterLink :to="{ name: 'register' }">Mes commandes</RouterLink>
+                  </CDropdownItem>
+                  <CDropdownItem>
+                    <button class="btn btn-danger w-100" @click="store.logout()">Déconnexion</button>
+                  </CDropdownItem>
+                </CDropdownMenu>
+              </CDropdown>
             </div>
           </div>
 
@@ -126,6 +121,7 @@
       <div class="overlay-screen"></div>
     </nav>
   </header>
+
   <router-view></router-view>
 
   <footer class="bg-dark text-light">
@@ -261,3 +257,21 @@
   </footer>
 </template>
 
+<style>
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: -10px;
+  background: #ff0000;
+  color: #fff;
+  border-radius: 50%;
+  padding-top: 4px;
+  width: 5px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  min-width: 20px;
+  text-align: center;
+}
+</style>

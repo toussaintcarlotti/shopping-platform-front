@@ -2,14 +2,13 @@
 import {RouterLink, RouterView} from 'vue-router'
 import { computed } from 'vue';
 import {useAuthStore} from "@/stores/authStore.js";
-import appLayout from '@/views/layouts/app-layout.vue';
-import authLayout from '@/views/layouts/auth-layout.vue';
+import AppLayout from '@/views/layouts/AppLayout.vue';
+import AuthLayout from '@/views/layouts/AuthLayout.vue';
 
 const store = useAuthStore();
 
 const mainLayout = computed(() => {
-  console.log("ferf")
-  return store.mainLayout === 'auth' ? authLayout : appLayout;
+  return store.mainLayout === 'auth' ? AuthLayout : AppLayout;
 });
 </script>
 
