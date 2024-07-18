@@ -40,9 +40,10 @@ export const useAuthStore = defineStore('app', {
             window.location.reload();
         },
 
-        async createUser({commit}, userInfo) {
-            await axios.post('users', userInfo).then((res) => {
+        async createUser(userInfo) {
+            await axios.post('register', userInfo).then((res) => {
                 console.log(res)
+                router.push('/login');
             }).catch((error) => {
                 console.log(error)
             });

@@ -9,6 +9,10 @@ const form = {
   password: ''
 };
 
+  function register() {
+    useAuthStore().createUser(form)
+  }
+
 </script>
 
 <template>
@@ -26,29 +30,29 @@ const form = {
             <p class="text-center">
               Connectez-vous à votre compte pour ajouter des articles aux paniers ou voir vos commande
             </p>
-            <form action="" method="POST" class="contact-form mt-5">
+            <form @submit.prevent="register" class="mt-5">
               <div class="row g-4">
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input class="form-control" id="last_name" name="last_name" placeholder="Nom*" type="text">
+                    <input class="form-control" id="last_name" v-model="form.last_name" placeholder="Nom*" type="text">
                     <span class="alert-error"></span>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input class="form-control" id="first_name" name="first_name" placeholder="Prénom*" type="text">
+                    <input class="form-control" id="first_name" v-model="form.first_name" placeholder="Prénom*" type="text">
                     <span class="alert-error"></span>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input class="form-control" v-model="form.email" id="email" name="email" placeholder="Email*" type="email">
+                    <input class="form-control" id="email" v-model="form.email" placeholder="Email*" type="email">
                     <span class="alert-error"></span>
                   </div>
                 </div>
                 <div class="col-lg-6">
                   <div class="form-group">
-                    <input class="form-control"  v-model="form.password" id="password" name="password" placeholder="Mot de passe*"
+                    <input class="form-control" id="password" v-model="form.password" placeholder="Mot de passe*"
                            type="password">
                     <span class="alert-error"></span>
                   </div>
