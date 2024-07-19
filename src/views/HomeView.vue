@@ -2,12 +2,10 @@
 import {onMounted, ref} from "vue";
 import axios from "@/api/axios.js";
 import {useCartStore} from "@/stores/cartStore.js";
-
-const products = ref([]);
-
-const cartStore = useCartStore();
 import { useToast } from 'vue-toastification'
 
+const cartStore = useCartStore();
+const products = ref([]);
 const toast = useToast()
 
 onMounted(() => {
@@ -32,7 +30,6 @@ const showSuccess = () => {
   <main>
     <div class="validtheme-shop-area default-padding">
       <div v-if="products.length > 0" class="container">
-
         <h2 class="text-center mb-5">Notre séléction</h2>
         <div class="row">
           <div class="col-lg-12">

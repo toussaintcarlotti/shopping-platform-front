@@ -2,7 +2,7 @@ import axios from 'axios'
 import {useAuthStore} from "@/stores/authStore.js";
 
 const instance = axios.create({
-    baseURL: 'http://shopping-platform-back.test/api',
+    baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
 });
 

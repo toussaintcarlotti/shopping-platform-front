@@ -16,7 +16,6 @@ export const useCartStore = defineStore('cartStore', {
             await axios.post('/cart/product/' + productId, {
                 quantity: quantity
             }).then((response) => {
-                console.log(response.data)
                 this.cart = response.data;
                 toast.success('Produit ajouté au panier');
             }).catch((error) => {

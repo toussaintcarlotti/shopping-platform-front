@@ -84,7 +84,7 @@ async function createOrder() {
 
           <div class="attr-right">
             <div class="attr-nav d-flex gap-4">
-              <Menu v-if="cartStore.cart">
+              <Menu v-if="cartStore.cart && cartStore.cart.products.length">
                 <button class="bg-transparent position-relative py-2">
                     <i class="far fa-shopping-cart fa-lg"></i>
                     <span class="cart-badge">{{ cartStore.cart.quantity }}</span>

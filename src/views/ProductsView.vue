@@ -1,4 +1,28 @@
 <script setup>
+
+import {onMounted, ref} from "vue";
+import axios from "@/api/axios.js";
+import {useToast} from "vue-toastification";
+import {useCartStore} from "@/stores/cartStore.js";
+
+const cartStore = useCartStore();
+const toast = useToast()
+const products = ref([]);
+
+onMounted(() => {
+  axios.get('/products')
+      .then(response => {
+        products.value = response.data.data;
+      })
+      .catch(error => {
+        toast.error('Erreur lors du chargement des produits')
+      });
+});
+
+async function addToCart(productId) {
+  await cartStore.addProduct(productId);
+}
+
 </script>
 
 <template>
@@ -41,7 +65,7 @@
 
             <div class="col-lg-5 text-right">
               <p>
-                Showing 1–10 of 47 results
+
               </p>
               <select name="cars" id="cars">
                 <option value="volvo">Short by latest</option>
@@ -57,7 +81,7 @@
             <div class="tab-content tab-content-info" id="shop-tabContent">
               <div class="tab-pane fade show active" id="grid-tab" role="tabpanel" aria-labelledby="grid-tab-control">
                 <ul class="vt-products columns-3">
-                  <li class="product">
+                  <li v-for="product in products" :key="product.id" class="product">
                     <div class="product-contents">
                       <div class="product-image">
                         <a href="shop-single.html">
@@ -79,26 +103,17 @@
                       </div>
                       <div class="product-caption">
                         <h4 class="product-title">
-                          <a href="shop-single.html">Face & Body Foundation</a>
+                          {{ product.name }}
                         </h4>
-                        <div class="review-count">
-                          <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                          </div>
-                          <span>8 Review</span>
-                        </div>
                         <div class="price">
-                          <span><del>$8.00</del></span>
-                          <span>$5.00</span>
+                          <span>{{ product.price }} €</span>
                         </div>
-                        <a href="#" class="btn">
-                          <i class="fas fa-shopping-cart"></i>
-                          <span>Add to cart</span>
-                        </a>
+                        <div class="d-flex justify-content-end">
+                          <button @click="addToCart(product.id)" class="btn">
+                            <i class="fas fa-shopping-cart me-2"></i>
+                            <span>Ajouter au panier</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </li>
@@ -107,13 +122,13 @@
 
               <div class="tab-pane fade" id="list-tab" role="tabpanel" aria-labelledby="list-tab-control">
                 <ul class="vt-products colums-2">
-                  <li class="product">
+                  <li class="product" v-for="product in products" :key="product.id">
                     <div class="product-contents">
                       <div class="row align-center">
                         <div class="col-lg-5">
                           <div class="product-image">
                             <span class="onsale">Sale!</span>
-                            <a href="shop-single.html">
+                            <a>
                               <img src="@/assets/images/piston.jpg" alt="Product">
                             </a>
                             <div class="shop-action">
@@ -134,10 +149,10 @@
                         <div class="col-lg-7">
                           <div class="product-caption">
                             <div class="tags">
-                              <a href="#">Laptop Mouse</a>
+                              <a>Catégorie</a>
                             </div>
                             <h4 class="product-title">
-                              <a href="shop-single.html">Face & Body Foundation</a>
+                              <a>{{ product.name }}</a>
                             </h4>
                             <div class="review-count">
                               <div class="rating">
@@ -150,68 +165,12 @@
                               <span>8 Review</span>
                             </div>
                             <div class="price">
-                              <span><del>$8.00</del></span>
-                              <span>$5.00</span>
+                              <span>{{ product.price }} €</span>
                             </div>
-                            <a href="#" class="btn">
-                              <i class="fas fa-shopping-cart"></i>
-                              <span>Add to cart</span>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="product">
-                    <div class="product-contents">
-                      <div class="row align-center">
-                        <div class="col-lg-5">
-                          <div class="product-image">
-                            <span class="onsale">Sale!</span>
-                            <a href="shop-single.html">
-                              <img src="@/assets/images/piston.jpg" alt="Product">
-                            </a>
-                            <div class="shop-action">
-                              <ul>
-                                <li class="wishlist">
-                                  <a href="#"><span>Add to wishlist</span></a>
-                                </li>
-                                <li class="compare">
-                                  <a href="#"><span>Compare</span></a>
-                                </li>
-                                <li class="quick-view">
-                                  <a href="#"><span>Quick view</span></a>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-lg-7">
-                          <div class="product-caption">
-                            <div class="tags">
-                              <a href="#">Laptop Mouse</a>
-                            </div>
-                            <h4 class="product-title">
-                              <a href="shop-single.html">Face & Body Foundation</a>
-                            </h4>
-                            <div class="review-count">
-                              <div class="rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                              </div>
-                              <span>8 Review</span>
-                            </div>
-                            <div class="price">
-                              <span><del>$8.00</del></span>
-                              <span>$5.00</span>
-                            </div>
-                            <a href="#" class="btn">
-                              <i class="fas fa-shopping-cart"></i>
-                              <span>Add to cart</span>
-                            </a>
+                            <button class="btn" @click="addToCart(product.id)">
+                              <i class="fas fa-shopping-cart me-2"></i>
+                              <span>Ajouter au panier</span>
+                            </button>
                           </div>
                         </div>
                       </div>
