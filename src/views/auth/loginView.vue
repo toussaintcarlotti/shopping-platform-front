@@ -43,7 +43,10 @@ const form = {
                   </div>
                 </div>
               </div>
-              <div class="d-flex justify-content-end mt-5">
+              <div class="d-flex justify-content-between align-center mt-5">
+                <div>
+                  <RouterLink :to="{ name: 'register' }" class="text-theme">Créer un compte</RouterLink>
+                </div>
                 <button class="btn circle btn-theme-effect btn-sm border" type="submit">
                   Connexion
                 </button>

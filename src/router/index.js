@@ -2,9 +2,9 @@ import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ProductsView from "@/views/ProductsView.vue";
 import {useAuthStore} from "@/stores/authStore.js";
-import Login from "@/views/auth/loginView.vue";
 import LoginView from "@/views/auth/loginView.vue";
 import RegisterView from "@/views/auth/RegisterView.vue";
+import {useCartStore} from "@/stores/cartStore.js";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +35,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    console.log(to?.meta?.layout)
     let nextRoute = true
     const store = useAuthStore();
     if (to?.meta?.layout === 'auth') {
@@ -44,11 +45,11 @@ router.beforeEach((to, from, next) => {
     }
 
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!localStorage.getItem('token')) {
+        if (!store.token) {
             nextRoute = '/login'
         }
     } else if (to.matched.some(record => record.meta.requiresGuest)) {
-        if (localStorage.getItem('token')) {
+        if (store.token) {
             store.setMainLayout('app');
             nextRoute = '/'
         }

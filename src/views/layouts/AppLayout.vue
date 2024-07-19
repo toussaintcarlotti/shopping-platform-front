@@ -7,11 +7,25 @@ import {
   CDropdownToggle
 } from "@coreui/vue/dist/esm/components/dropdown/index.js";
 
+import {
+  // Directives
+  vTooltip,
+  vClosePopper,
+  // Components
+  Dropdown,
+  Tooltip,
+  Menu
+} from 'floating-vue'
+
 import {useAuthStore} from "@/stores/authStore.js";
-import {onMounted} from "vue";
+import {useCartStore} from "@/stores/cartStore.js";
 
 const store = useAuthStore();
+const cartStore = useCartStore();
 
+async function removeToCart(productId) {
+  await cartStore.removeProduct(productId);
+}
 </script>
 
 <template>
@@ -57,61 +71,70 @@ const store = useAuthStore();
           </div>
 
           <div class="attr-right">
-            <div class="attr-nav">
-                <CDropdown>
-                  <CDropdownToggle>
-                    <div class="position-relative py-2">
-                      <i class="far fa-shopping-cart fa-lg"></i>
-                      <span class="cart-badge">3</span>
-                    </div>
-                  </CDropdownToggle>
-                  <CDropdownMenu>
-                    <CDropdownItem>
-                      <div class="d-flex">
-                        <div class="thumb">
-                          <a class="photo">
-                            <img src="@/assets/images/piston.jpg" alt="Thumb">
-                          </a>
-                          <a class="remove-product">
-                            <i class="fas fa-times"></i>
-                          </a>
-                        </div>
-                        <div class="info">
-                          <h6><a>Delica omtantur </a></h6>
-                          <p>2x - <span class="price">$99.99</span></p>
-                        </div>
-                      </div>
-                    </CDropdownItem>
-                    <CDropdownItem>Another action</CDropdownItem>
-                    <CDropdownItem>Something else here</CDropdownItem>
-                  </CDropdownMenu>
-                </CDropdown>
+            <div class="attr-nav d-flex gap-4">
+              <Menu v-if="cartStore.cart">
+                <button class="bg-transparent position-relative py-2">
+                    <i class="far fa-shopping-cart fa-lg"></i>
+                    <span class="cart-badge">{{ cartStore.cart.quantity }}</span>
+                </button>
 
-              <CDropdown>
-                <CDropdownToggle>
+                <template #popper>
+                  <div class="p-3 overflow-y-scroll" style="max-height: 300px; min-width: 300px">
+                    <div class="row" style="width: 300px" v-for="product in cartStore.cart.products"
+                         :key="product.id">
+                      <div class="col-3 thumb">
+                        <img src="@/assets/images/piston.jpg" alt="Thumb">
+                      </div>
+                      <div class="info col-6">
+                        <h6><a>{{ product.name }} </a></h6>
+                        <p>{{ product.pivot.quantity }}x - <span
+                            class="text-primary">{{ product.price * product.pivot.quantity }} €</span></p>
+                      </div>
+                      <div class="col-3 text-end">
+                        <button @click="removeToCart(product.id)" class="btn">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </Menu>
+              <div v-else>
+                <div class="bg-transparent position-relative py-2 text-black">
+                  <i class="far fa-shopping-cart fa-lg"></i>
+                </div>
+              </div>
+
+              <Menu>
+                <button class="bg-transparent py-2">
                   <i class="far fa-user fa-lg"></i>
-                </CDropdownToggle>
-                <CDropdownMenu class="cart-list" v-if="!store.token">
-                  <CDropdownItem>
-                    <RouterLink :to="{ name: 'login' }">Connexion</RouterLink>
-                  </CDropdownItem>
-                  <CDropdownItem>
-                    <RouterLink :to="{ name: 'register' }">Inscription</RouterLink>
-                  </CDropdownItem>
-                </CDropdownMenu>
-                <CDropdownMenu class="cart-list" v-if="store.token">
-                  <CDropdownItem>
-                    <div class="fw-bold h5 mb-0">{{ store.user.first_name }} {{ store.user.last_name }}</div>
-                    <p class="text-muted small mb-0">{{ store.user.email }}</p>
-                  </CDropdownItem>
-                  <CDropdownItem>
-                    <RouterLink :to="{ name: 'register' }">Mes commandes</RouterLink>
-                  </CDropdownItem>
-                  <CDropdownItem>
-                    <button class="btn btn-danger w-100" @click="store.logout()">Déconnexion</button>
-                  </CDropdownItem>
-                </CDropdownMenu>
-              </CDropdown>
+                </button>
+
+                <template #popper>
+                  <div class="p-3" >
+                    <div class="cart-list" v-if="!store.token">
+                      <div>
+                        <RouterLink :to="{ name: 'login' }">Connexion</RouterLink>
+                      </div>
+                      <div>
+                        <RouterLink :to="{ name: 'register' }">Inscription</RouterLink>
+                      </div>
+                    </div>
+                    <div class="cart-list" v-if="store.token">
+                      <div>
+                        <div class="fw-bold h5 mb-0">{{ store.user.first_name }} {{ store.user.last_name }}</div>
+                        <p class="text-muted small mb-0">{{ store.user.email }}</p>
+                      </div>
+                      <div>
+                        <RouterLink :to="{ name: 'register' }">Mes commandes</RouterLink>
+                      </div>
+                      <div>
+                        <button class="btn btn-danger w-100" @click="store.logout()">Déconnexion</button>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </Menu>
             </div>
           </div>
 

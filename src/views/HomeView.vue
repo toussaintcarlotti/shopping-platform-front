@@ -1,18 +1,45 @@
 <script setup>
+import {onMounted, ref} from "vue";
+import axios from "@/api/axios.js";
+import {useCartStore} from "@/stores/cartStore.js";
 
+const products = ref([]);
+
+const cartStore = useCartStore();
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
+
+onMounted(() => {
+  axios.get('/products/overview')
+      .then(response => {
+        products.value = response.data;
+      })
+      .catch(error => {
+        toast.error('Erreur lors du chargement des produits')
+      });
+});
+
+async function addToCart(productId) {
+  await cartStore.addProduct(productId);
+}
+
+const showSuccess = () => {
+};
 </script>
 
 <template>
   <main>
     <div class="validtheme-shop-area default-padding">
-      <div class="container">
+      <div v-if="products.length > 0" class="container">
+
         <h2 class="text-center mb-5">Notre séléction</h2>
         <div class="row">
           <div class="col-lg-12">
             <div class="tab-content tab-content-info" id="shop-tabContent">
               <div class="tab-pane fade show active" id="grid-tab" role="tabpanel" aria-labelledby="grid-tab-control">
                 <ul class="vt-products columns-3 justify-content-center">
-                  <li class="product">
+                  <li v-for="product in products" :key="product.id" class="product">
                     <div class="product-contents">
                       <div class="product-image">
                         <a href="shop-single.html">
@@ -34,26 +61,17 @@
                       </div>
                       <div class="product-caption">
                         <h4 class="product-title">
-                          <a href="shop-single.html">Face & Body Foundation</a>
+                          {{ product.name }}
                         </h4>
-                        <div class="review-count">
-                          <div class="rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                          </div>
-                          <span>8 Review</span>
-                        </div>
                         <div class="price">
-                          <span><del>$8.00</del></span>
-                          <span>$5.00</span>
+                          <span>{{ product.price }} €</span>
                         </div>
-                        <a href="#" class="btn">
-                          <i class="fas fa-shopping-cart"></i>
-                          <span>Add to cart</span>
-                        </a>
+                        <div class="d-flex justify-content-end">
+                          <button @click="addToCart(product.id)" class="btn">
+                            <i class="fas fa-shopping-cart me-2"></i>
+                            <span>Ajouter au panier</span>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </li>
@@ -70,6 +88,11 @@
               </ul>
             </nav>-->
           </div>
+        </div>
+      </div>
+      <div v-else class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
       </div>
     </div>
