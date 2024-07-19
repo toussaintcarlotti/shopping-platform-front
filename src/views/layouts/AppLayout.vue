@@ -19,12 +19,24 @@ import {
 
 import {useAuthStore} from "@/stores/authStore.js";
 import {useCartStore} from "@/stores/cartStore.js";
+import {useToast} from "vue-toastification";
+import axios from "@/api/axios.js";
 
 const store = useAuthStore();
 const cartStore = useCartStore();
+const toast = useToast()
 
 async function removeToCart(productId) {
   await cartStore.removeProduct(productId);
+}
+
+async function createOrder() {
+  await axios.post('/orders').then(response => {
+    cartStore.clearCart();
+    toast.success('Commande validée')
+  }).catch(error => {
+    toast.error('Erreur lors de la validation de la commande: ' + error.response.data.message)
+  });
 }
 </script>
 
@@ -79,7 +91,7 @@ async function removeToCart(productId) {
                 </button>
 
                 <template #popper>
-                  <div class="p-3 overflow-y-scroll" style="max-height: 300px; min-width: 300px">
+                  <div class="p-3 overflow-y-scroll" style="max-height: 400px; min-width: 300px;margin-bottom: 120px">
                     <div class="row" style="width: 300px" v-for="product in cartStore.cart.products"
                          :key="product.id">
                       <div class="col-3 thumb">
@@ -96,6 +108,9 @@ async function removeToCart(productId) {
                         </button>
                       </div>
                     </div>
+                  </div>
+                  <div class="text-center position-fixed bottom-0 p-3 bg-white z-5 w-100">
+                    <button @click="createOrder" class="btn btn-primary ">Valider le panier</button>
                   </div>
                 </template>
               </Menu>

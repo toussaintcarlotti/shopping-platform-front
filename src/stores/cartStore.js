@@ -18,7 +18,6 @@ export const useCartStore = defineStore('cartStore', {
             }).then((response) => {
                 console.log(response.data)
                 this.cart = response.data;
-                localStorage.setItem('cart', JSON.stringify(this.cart));
                 toast.success('Produit ajouté au panier');
             }).catch((error) => {
                 if (error.response.status === 401) {
@@ -32,12 +31,15 @@ export const useCartStore = defineStore('cartStore', {
         async removeProduct(productId) {
             await axios.delete('/cart/product/' + productId).then((response) => {
                 this.cart = response.data;
-                localStorage.setItem('cart', JSON.stringify(this.cart));
                 toast.success('Produit retiré du panier');
             }).catch((error) => {
                 toast.error('Une erreur est survenue : ' + error.response.data.error);
             });
         },
+
+        clearCart() {
+            this.cart = null;
+        }
     },
     persist: {
         enabled: true

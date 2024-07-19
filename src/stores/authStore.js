@@ -19,12 +19,12 @@ export const useAuthStore = defineStore('authStore', {
         authenticateUser(data) {
             this.$state.token = data.token;
             this.$state.user = data.user;
-            localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('token', data.token);
         },
 
         unauthenticateUser() {
-            localStorage.clear();
+            this.$state.token = null;
+            this.$state.user = null;
+            useCartStore().cart = null;
         },
 
         async login(credentials) {
@@ -33,7 +33,6 @@ export const useAuthStore = defineStore('authStore', {
                 router.push('/');
                 axios.get('cart').then((res) => {
                     useCartStore().cart = res.data;
-                    localStorage.setItem('cart', JSON.stringify(this.cart));
                 }).catch((error) => {
                     toast.error('Erreur de récupération du panier : ' + error.response.data.message);
                 });
@@ -46,26 +45,25 @@ export const useAuthStore = defineStore('authStore', {
         },
         async logout() {
             await axios.post('logout').then((res) => {
-                console.log(res)
+                this.unauthenticateUser()
+                window.location.reload();
                 toast.success('Déconnexion réussie');
             }).catch((error) => {
                 console.log(error)
                 toast.error('Erreur de déconnexion : ' + error.response.data.message);
             });
-            this.unauthenticateUser()
-            window.location.reload();
+
         },
 
         async createUser(userInfo) {
             await axios.post('register', userInfo).then((res) => {
-                console.log(res)
+                this.unauthenticateUser()
                 router.push('/login');
                 toast.success('Inscription réussie');
             }).catch((error) => {
                 console.log(error)
                 toast.error('Erreur : ' + error.response.data.message);
             });
-            this.unauthenticateUser()
         },
 
         setMainLayout(payload = null) {
