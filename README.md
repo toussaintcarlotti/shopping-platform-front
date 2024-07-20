@@ -1,29 +1,24 @@
 # shopping-platform-front
 
-This template should help get you started developing with Vue 3 in Vite.
+## Mise en place du projet
 
-## Recommended IDE Setup
+### Configuration de l'environnement
+Créer un fichier `.env` à la racine du projet et y ajouter les variables d'environnement suivantes (un fichier .env.example est fourni pour l'exemple) :
+```sh
+VITE_API_URL==http://localhost:3000
+```
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
+### Installation des dépendances
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
-
+### Lancer le serveur de développement
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
-
+### Build le projet (pour la production)
 ```sh
 npm run build
 ```
